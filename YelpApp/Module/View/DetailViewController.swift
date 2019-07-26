@@ -24,8 +24,10 @@ class DetailViewController: UIViewController {
     let viewModel = ViewModel.shared
    
     override func viewDidLoad() {
-        viewModel.reviewLoaded = {
-            self.loadReview()
+        viewModel.reviewLoaded = {[weak self] in
+            DispatchQueue.main.async {
+                self?.loadReview()
+            }
         }
         
         let resto = viewModel.getBusinuess(at: viewModel.selectedResto ?? 0)
@@ -34,6 +36,10 @@ class DetailViewController: UIViewController {
         address.text = resto.address
         rating.text = resto.rating
         distance.text = resto.distance
+        type.text = resto.type
+        open.text = resto.open
+        deliveryMethod.text = resto.deliveryMethod
+        phoneNumber.text = resto.phone
         guard let imageUrl = resto.imageUrl, let url = URL(string: imageUrl) else {
             return
         }

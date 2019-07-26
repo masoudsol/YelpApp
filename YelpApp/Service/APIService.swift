@@ -12,22 +12,74 @@ struct WebServiceConstants {
     static let baseURL = "https://api.yelp.com/v3"
     static let businuesSearchAPI = "/businesses/search"
     static let reviewsAPI = "/businesses/{id}/reviews"
+    static let autocompleteAPI = "/autocomplete"
     static let kAPIKEY = "Bearer iO2PJJCcnQY_WAq8PkD0jA70ErLPueb6vKxtSAitf64pEf2D48IG8PlN63kg33OmRF0hrwgLzBUwanilm7j4ilTZHfsi_UGEQsKP4fFhAa418KSijPgctrZhLzycW3Yx"
 }
 
 class APIService {
-    typealias WebServiceCompletionBlock = (_ data: AnyObject?,_ error: Error?)->Void
+    typealias WebServiceCompletionBlock = (_ data: Data?,_ error: Error?)->Void
+    typealias ParsedCompletionBlock = (_ data: AnyObject?,_ error: Error?)->Void
     
-    func fetchRestaurant(lat: String, long: String, complete: @escaping WebServiceCompletionBlock) {
-        let url = WebServiceConstants.baseURL + WebServiceConstants.businuesSearchAPI + "?latitude=" + lat + "&longitude=" + long
-        requestAPI(url: url, completion: complete)
+    func fetchRestaurant(keyword: String?, lat: String, long: String, complete: @escaping ParsedCompletionBlock) {
+        var url = WebServiceConstants.baseURL + WebServiceConstants.businuesSearchAPI
+        if let keyword = keyword {
+            url += "?term=" + keyword + "&"
+        } else {
+            url += "?"
+        }
+        url += "latitude=" + lat + "&longitude=" + long
+        requestAPI(url: url){ (data, error) in
+            guard let data = data else{
+                complete(nil,error)
+                return
+            }
+            
+            do {
+                let parsedJson = try self.parseJson(RestaurantModel.self, from: data)
+                complete(parsedJson as AnyObject,error)
+            } catch let error {
+                print(error.localizedDescription)
+                complete(nil,error)
+            }
+        }
     }
     
-    func fetchRestaurantReview(businuessID: String, complete: @escaping WebServiceCompletionBlock) {
+    func fetchRestaurantReview(businuessID: String, complete: @escaping ParsedCompletionBlock) {
         var url = WebServiceConstants.baseURL + WebServiceConstants.reviewsAPI
         url = url.replacingOccurrences(of: "{id}", with: businuessID)
         
-        requestAPI(url: url, completion: complete)
+        requestAPI(url: url){ (data, error) in
+            guard let data = data else{
+                complete(nil,error)
+                return
+            }
+            
+            do {
+                let parsedJson = try self.parseJson(ReviewModel.self, from: data)
+                complete(parsedJson as AnyObject,error)
+            } catch let error {
+                print(error.localizedDescription)
+                complete(nil,error)
+            }
+        }
+    }
+    
+    func fetchAutoComplete(keyword: String, lat: String, long: String, complete: @escaping ParsedCompletionBlock) {
+        let url = WebServiceConstants.baseURL + WebServiceConstants.autocompleteAPI + "?text=" + keyword + "&latitude=" + lat + "&longitude=" + long
+        requestAPI(url: url){ (data, error) in
+            guard let data = data else{
+                complete(nil,error)
+                return
+            }
+            
+            do {
+                let parsedJson = try self.parseJson(AutoCompleteModel.self, from: data)
+                complete(parsedJson as AnyObject,error)
+            } catch let error {
+                print(error.localizedDescription)
+                complete(nil,error)
+            }
+        }
     }
     
     func requestAPI(url: String, completion: @escaping WebServiceCompletionBlock) {
@@ -44,19 +96,24 @@ class APIService {
             
             if let httpStatus = response as? HTTPURLResponse, httpStatus.statusCode != 200 {           // check for http errors
                 print("Error in fetching response")
+                completion(nil, error)
             }
             
-            do {
-                let decoder = JSONDecoder()
-                let restaurantModel = try decoder.decode(RestaurantModel.self, from: data)
-                completion(restaurantModel as AnyObject,error)
-            } catch let error {
-                print(error.localizedDescription)
-                completion(nil,error)
-            }
+            completion(data,error)
             
         }
         task.resume()
         
+    }
+    
+    func parseJson<T>(_ type: T.Type, from data: Data)  throws -> T? where T : Decodable {
+        do {
+            let decoder = JSONDecoder()
+            let model = try decoder.decode(type.self, from: data)
+            return model
+        } catch let error {
+            print(error.localizedDescription)
+            return nil
+        }
     }
 }

@@ -16,7 +16,7 @@ struct RestaurantModel: Codable {
 struct Business: Codable  {
     let id: String
     let alias: String?
-    let name: String?
+    let name: String
     let image_url: String?
     let is_closed: Bool = true
     let url: String?

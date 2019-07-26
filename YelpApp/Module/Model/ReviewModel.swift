@@ -22,5 +22,5 @@ struct Review: Codable  {
 
 struct User: Codable {
     let id: String
-    let name: String?
+    let name: String
 }

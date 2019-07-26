@@ -10,23 +10,23 @@ import Foundation
 
 
 class ViewModel {
-    typealias Restaurant = (name: String?, address: String?, rating: String?, distance: String?, type: String?, imageUrl: String?)
+    typealias Restaurant = (name: String?, address: String?, rating: String?, distance: String?, type: String?, imageUrl: String?, open: String, phone: String?, deliveryMethod: String?)
     
     static let shared = ViewModel()
     
     var reloadTable: ()->() = { }
     var reviewLoaded: ()->() = { }
-    var restaurantModel = RestaurantModel(businesses: [])
+    var restaurantModel = [Business]()
     var reviewModel = ReviewModel(reviews: [])
     
     private var services = APIService()
     var selectedResto: Int?
     private init(){}
     
-    func fetchRestaurants(lat: String, long: String){
-        services.fetchRestaurant(lat: lat, long: long) { (result, error) in
-            if let result = result as? RestaurantModel {
-                self.restaurantModel = result
+    func fetchRestaurants(keyword: String?, lat: String, long: String){
+        services.fetchRestaurant(keyword: keyword, lat: lat, long: long) { (result, error) in
+            if let result = result as? RestaurantModel, let businuesses = result.businesses {
+                self.restaurantModel = businuesses
                 self.reloadTable()
             }
         }
@@ -34,26 +34,43 @@ class ViewModel {
     
     func getBusinuess(at index: Int) -> Restaurant {
         
-        guard let business = restaurantModel.businesses?[index] else {
-            return ("", "", "", "", "", "")
+        let business = restaurantModel[index]
+        let ratingString = String(format: "%.1f stars from %d reviews", business.rating ?? "N/A" , business.review_count ?? 0)
+        var distanceKM: String
+        if let distance = business.distance{
+            distanceKM = String(format: "Distance %.2fkm", distance/1000)
+        } else {
+            distanceKM = "Distance N/A"
         }
-        let ratingString = String(format: "%f%@%d", business.rating ?? "N/A", " stars from " , business.review_count ?? 0)
-        let distance = String(format: "%@%f%@", "Distance ", business.distance ?? "N/A", "km")
+        
         var categoriesText = ""
         if let categories = business.categories  {
-            categories.forEach { (category) in
-                categoriesText += category.title ?? ""
+            categories.forEach {
+                categoriesText += $0.title ?? ""
+                categoriesText += "-"
+            }
+            if categories.count > 0 {
+                categoriesText.removeLast()
             }
         }
         
-        return (business.name, business.location?.address1, ratingString, distance, categoriesText, business.image_url)
+        var deliverText = ""
+        if let transactions = business.transactions  {
+            transactions.forEach {
+                deliverText += $0
+                deliverText += "-"
+            }
+            if transactions.count > 0 {
+                deliverText.removeLast()
+            }
+        }
+        
+        return (business.name, business.location?.address1, ratingString, distanceKM, categoriesText, business.image_url, business.is_closed ? "Closed":"Open", business.phone, deliverText)
     }
     
     func fetchReview(at index: Int) {
         selectedResto = index
-        guard let business = restaurantModel.businesses?[index] else {
-            return
-        }
+        let business = restaurantModel[index]
         services.fetchRestaurantReview(businuessID: business.id) { (result, error) in
             if let result = result as? ReviewModel {
                 self.reviewModel = result
@@ -62,9 +79,24 @@ class ViewModel {
         }
     }
     
-    func getReview() -> String {
+    func getReview() -> String? {
         let review = reviewModel.reviews?[0]
         
-        return String(format: "%dStars by %@: %@", review?.rating ?? 0,review?.user?.name ?? "N/A",review?.text ?? "N/A")
+        guard let name = review?.user?.name, let text = review?.text, let rating = review?.rating else {
+            return nil
+        }
+        return String(format: "%.0f Stars by %@\n%@", rating, name, text)
+    }
+    
+    func fetchAutoComplete(keyword: String, lat: String, long: String){
+        
+    }
+    
+    func sort(){
+        restaurantModel = restaurantModel.sorted {
+            $0.name < $1.name
+        }
+        
+        reloadTable()
     }
 }
