@@ -13,7 +13,7 @@ struct RestaurantModel: Codable {
     let businesses: [Business]?
 }
 
-struct Business: Codable  {
+struct Business: Codable {
     let id: String
     let alias: String?
     let name: String
@@ -32,7 +32,7 @@ struct Business: Codable  {
     let distance: Double?
 }
 
-struct Category: Codable  {
+struct Category: Codable {
     let alias: String?
     let title: String?
 }

@@ -21,7 +21,7 @@ class ViewController: UICollectionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        searchBar.placeholder = "Search a Restaurant"
+        searchBar.placeholder = "Search a Business"
         searchBar.delegate = self
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView:searchBar)
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Sort(A-z)", style: .plain, target: self, action: #selector(sortTapped))
@@ -63,9 +63,25 @@ extension ViewController {
         
         restaurantCell.name.text = resto.name
         restaurantCell.address.text = resto.address
-        restaurantCell.rating.text = resto.rating
         restaurantCell.distance.text = resto.distance
-        restaurantCell.type.text = resto.type
+        restaurantCell.layer.borderColor = UIColor.lightGray.cgColor
+        
+        if let rating = resto.rating, let reviewCount = resto.reviewCount{
+            let rating = NSMutableAttributedString(string: String(rating), attributes: [NSAttributedString.Key.foregroundColor : UIColor.orange])
+            rating.append(NSAttributedString(string: " stars from "))
+            rating.append(NSAttributedString(string: String(reviewCount), attributes: [NSAttributedString.Key.foregroundColor : UIColor.orange]))
+            rating.append(NSAttributedString(string: " reviews"))
+            restaurantCell.rating.attributedText = rating
+        }
+        
+        if let price = resto.price, let type = resto.type {
+            let attributedPrice = NSMutableAttributedString(string: price, attributes: [NSAttributedString.Key.foregroundColor : UIColor.brown])
+            attributedPrice.append(NSAttributedString(string: " "+type))
+            restaurantCell.type.attributedText = attributedPrice
+        } else {
+            restaurantCell.type.text = resto.type
+        }
+        
         guard let imageUrl = resto.imageUrl, let url = URL(string: imageUrl) else {
             return restaurantCell
         }
@@ -107,7 +123,6 @@ extension ViewController: CLLocationManagerDelegate {
 extension ViewController: UISearchBarDelegate {
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-//        searchBar.text
         if let locValue: CLLocationCoordinate2D = locationManager?.location?.coordinate {
             viewModel.fetchRestaurants(keyword: searchBar.text, lat: String(locValue.latitude), long:  String(locValue.longitude))
         } else {

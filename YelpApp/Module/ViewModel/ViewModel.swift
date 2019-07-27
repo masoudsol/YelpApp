@@ -10,7 +10,7 @@ import Foundation
 
 
 class ViewModel {
-    typealias Restaurant = (name: String?, address: String?, rating: String?, distance: String?, type: String?, imageUrl: String?, open: String, phone: String?, deliveryMethod: String?)
+    typealias Restaurant = (name: String?, address: String?, rating: Double?, reviewCount: Int?, distance: String?, type: String?, imageUrl: String?, open: String, phone: String?, deliveryMethod: String?, price: String?, completeAddress: String?)
     
     static let shared = ViewModel()
     
@@ -18,9 +18,9 @@ class ViewModel {
     var reviewLoaded: ()->() = { }
     var restaurantModel = [Business]()
     var reviewModel = ReviewModel(reviews: [])
+    var selectedResto: Int?
     
     private var services = APIService()
-    var selectedResto: Int?
     private init(){}
     
     func fetchRestaurants(keyword: String?, lat: String, long: String){
@@ -33,18 +33,16 @@ class ViewModel {
     }
     
     func getBusinuess(at index: Int) -> Restaurant {
-        
         let business = restaurantModel[index]
-        let ratingString = String(format: "%.1f stars from %d reviews", business.rating ?? "N/A" , business.review_count ?? 0)
         var distanceKM: String
         if let distance = business.distance{
-            distanceKM = String(format: "Distance %.2fkm", distance/1000)
+            distanceKM = String(format: "Distance %.2fkm from you", distance/1000)
         } else {
             distanceKM = "Distance N/A"
         }
         
         var categoriesText = ""
-        if let categories = business.categories  {
+        if let categories = business.categories {
             categories.forEach {
                 categoriesText += $0.title ?? ""
                 categoriesText += "-"
@@ -55,7 +53,7 @@ class ViewModel {
         }
         
         var deliverText = ""
-        if let transactions = business.transactions  {
+        if let transactions = business.transactions {
             transactions.forEach {
                 deliverText += $0
                 deliverText += "-"
@@ -65,7 +63,19 @@ class ViewModel {
             }
         }
         
-        return (business.name, business.location?.address1, ratingString, distanceKM, categoriesText, business.image_url, business.is_closed ? "Closed":"Open", business.phone, deliverText)
+        var completeAddress = ""
+        if let displayAddress = business.location?.display_address {
+            displayAddress.forEach {
+                completeAddress += $0
+                completeAddress += " "
+            }
+            
+            if displayAddress.count > 0 {
+                completeAddress.removeLast()
+            }
+        }
+        
+        return (business.name, business.location?.address1, business.rating, business.review_count, distanceKM, categoriesText, business.image_url, business.is_closed ? "Closed":"Open", business.phone, deliverText, business.price, completeAddress)
     }
     
     func fetchReview(at index: Int) {
