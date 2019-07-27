@@ -10,7 +10,7 @@ import Foundation
 
 
 class ViewModel {
-    typealias Restaurant = (name: String?, address: String?, rating: Double?, reviewCount: Int?, distance: String?, type: String?, imageUrl: String?, open: String, phone: String?, deliveryMethod: String?, price: String?, completeAddress: String?)
+    typealias Restaurant = (name: String?, address: String?, rating: Double?, reviewCount: Int?, distance: String?, type: String?, imageUrl: String?, open: String, phone: String?, deliveryMethod: String?, price: String?, completeAddress: String?, restoID: String)
     
     static let shared = ViewModel()
     
@@ -18,7 +18,7 @@ class ViewModel {
     var reviewLoaded: ()->() = { }
     var restaurantModel = [Business]()
     var reviewModel = ReviewModel(reviews: [])
-    var selectedResto: Int?
+    var selectedResto: Int = 0
     
     private var services = APIService()
     private init(){}
@@ -75,7 +75,7 @@ class ViewModel {
             }
         }
         
-        return (business.name, business.location?.address1, business.rating, business.review_count, distanceKM, categoriesText, business.image_url, business.is_closed ? "Closed":"Open", business.phone, deliverText, business.price, completeAddress)
+        return (business.name, business.location?.address1, business.rating, business.review_count, distanceKM, categoriesText, business.image_url, business.is_closed ? "Closed":"Open", business.phone, deliverText, business.price, completeAddress, business.id)
     }
     
     func fetchReview(at index: Int) {

@@ -12,7 +12,7 @@
 		4549705322EBDE2A00CF540E /* ScrollViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4549705222EBDE2A00CF540E /* ScrollViewController.swift */; };
 		456EF18B22EA09B300F5D8FD /* RestaurantCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 456EF18A22EA09B300F5D8FD /* RestaurantCell.swift */; };
 		45A5B7B022E8EC790015BB62 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A5B7AF22E8EC790015BB62 /* AppDelegate.swift */; };
-		45A5B7B222E8EC790015BB62 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A5B7B122E8EC790015BB62 /* ViewController.swift */; };
+		45A5B7B222E8EC790015BB62 /* CollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A5B7B122E8EC790015BB62 /* CollectionViewController.swift */; };
 		45A5B7B522E8EC790015BB62 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 45A5B7B322E8EC790015BB62 /* Main.storyboard */; };
 		45A5B7B722E8EC7A0015BB62 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 45A5B7B622E8EC7A0015BB62 /* Assets.xcassets */; };
 		45A5B7BA22E8EC7A0015BB62 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 45A5B7B822E8EC7A0015BB62 /* LaunchScreen.storyboard */; };
@@ -29,7 +29,7 @@
 		456EF18A22EA09B300F5D8FD /* RestaurantCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantCell.swift; sourceTree = "<group>"; };
 		45A5B7AC22E8EC790015BB62 /* YelpApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = YelpApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		45A5B7AF22E8EC790015BB62 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		45A5B7B122E8EC790015BB62 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		45A5B7B122E8EC790015BB62 /* CollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewController.swift; sourceTree = "<group>"; };
 		45A5B7B422E8EC790015BB62 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		45A5B7B622E8EC7A0015BB62 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		45A5B7B922E8EC7A0015BB62 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -125,7 +125,7 @@
 		45A5B7C422E909AB0015BB62 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				45A5B7B122E8EC790015BB62 /* ViewController.swift */,
+				45A5B7B122E8EC790015BB62 /* CollectionViewController.swift */,
 				456EF18A22EA09B300F5D8FD /* RestaurantCell.swift */,
 				4549705222EBDE2A00CF540E /* ScrollViewController.swift */,
 			);
@@ -267,7 +267,7 @@
 			files = (
 				456EF18B22EA09B300F5D8FD /* RestaurantCell.swift in Sources */,
 				45A5B7CB22E90DD50015BB62 /* ViewModel.swift in Sources */,
-				45A5B7B222E8EC790015BB62 /* ViewController.swift in Sources */,
+				45A5B7B222E8EC790015BB62 /* CollectionViewController.swift in Sources */,
 				45A5B7C922E90AA30015BB62 /* RestaurantModel.swift in Sources */,
 				45A5B7C722E90A480015BB62 /* APIService.swift in Sources */,
 				45A5B7B022E8EC790015BB62 /* AppDelegate.swift in Sources */,

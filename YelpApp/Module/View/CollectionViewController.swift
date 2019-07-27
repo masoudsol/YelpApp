@@ -10,7 +10,7 @@ import UIKit
 import CoreLocation
 import PINRemoteImage
 
-class ViewController: UICollectionViewController {
+class CollectionViewController: UICollectionViewController {
     
     private let viewModel = ViewModel.shared
     private let loading = UIActivityIndicatorView(style: .whiteLarge)
@@ -47,13 +47,17 @@ class ViewController: UICollectionViewController {
         }
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        collectionView.reloadData()
+    }
+    
     @objc func sortTapped(){
         viewModel.sort()
     }
 }
 
 //Data Source
-extension ViewController {
+extension CollectionViewController {
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let restaurantCell = collectionView.dequeueReusableCell(withReuseIdentifier: "RestaurantCell", for: indexPath) as? RestaurantCell else {
@@ -61,6 +65,7 @@ extension ViewController {
         }
         let resto = viewModel.getBusinuess(at: indexPath.item)
         
+        restaurantCell.favouriteImageView.isHidden = !UserDefaults.standard.bool(forKey: resto.restoID)
         restaurantCell.name.text = resto.name
         restaurantCell.address.text = resto.address
         restaurantCell.distance.text = resto.distance
@@ -101,7 +106,7 @@ extension ViewController {
 }
 
 //Location Manager Delegate
-extension ViewController: CLLocationManagerDelegate {
+extension CollectionViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         switch status {
         case .denied, .restricted:
@@ -120,7 +125,7 @@ extension ViewController: CLLocationManagerDelegate {
 }
 
 //Search Bar Delegate
-extension ViewController: UISearchBarDelegate {
+extension CollectionViewController: UISearchBarDelegate {
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         if let locValue: CLLocationCoordinate2D = locationManager?.location?.coordinate {
@@ -136,14 +141,14 @@ extension ViewController: UISearchBarDelegate {
 }
 
 //Autocomplete TableView Delegate
-extension ViewController: UITableViewDelegate {
+extension CollectionViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
     }
 }
 
 //Autocomplete TableView DataSource
-extension ViewController: UITableViewDataSource {
+extension CollectionViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         return UITableViewCell()
     }

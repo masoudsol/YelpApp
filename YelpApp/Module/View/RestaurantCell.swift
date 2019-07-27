@@ -16,4 +16,5 @@ class RestaurantCell: UICollectionViewCell {
     @IBOutlet weak var rating: UILabel!
     @IBOutlet weak var type: UILabel!
     @IBOutlet weak var distance: UILabel!
+    @IBOutlet weak var favouriteImageView: UIImageView!
 }

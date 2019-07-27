@@ -17,6 +17,7 @@
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="Yi0-HX-RQu">
                         <rect key="frame" x="0.0" y="44" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </navigationBar>
                     <connections>
                         <segue destination="nb7-Dz-yEx" kind="relationship" relationship="rootViewController" id="F2c-SU-PIR"/>
@@ -26,10 +27,10 @@
             </objects>
             <point key="canvasLocation" x="58" y="-74"/>
         </scene>
-        <!--View Controller-->
+        <!--Collection View Controller-->
         <scene sceneID="RnV-7W-bPw">
             <objects>
-                <collectionViewController id="nb7-Dz-yEx" customClass="ViewController" customModule="YelpApp" customModuleProvider="target" sceneMemberID="viewController">
+                <collectionViewController id="nb7-Dz-yEx" customClass="CollectionViewController" customModule="YelpApp" customModuleProvider="target" sceneMemberID="viewController">
                     <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="Y2L-HP-e46">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -53,6 +54,9 @@
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="145" id="QMd-Gc-FIe"/>
                                             </constraints>
+                                        </imageView>
+                                        <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Star_On" translatesAutoresizingMaskIntoConstraints="NO" id="irh-kN-Dph">
+                                            <rect key="frame" x="150" y="10" width="30" height="30"/>
                                         </imageView>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ccv-TD-vqV">
                                             <rect key="frame" x="5" y="150" width="180" height="20.5"/>
@@ -92,11 +96,13 @@
                                     <constraint firstItem="Ccv-TD-vqV" firstAttribute="centerX" secondItem="Zhj-HT-l6o" secondAttribute="centerX" id="7gb-w9-LOq"/>
                                     <constraint firstItem="a2m-2I-85n" firstAttribute="leading" secondItem="Zhj-HT-l6o" secondAttribute="leading" constant="10" id="Fbj-EW-CRU"/>
                                     <constraint firstItem="4aO-Fg-ISK" firstAttribute="leading" secondItem="Zhj-HT-l6o" secondAttribute="leading" constant="10" id="IMi-N1-RrQ"/>
+                                    <constraint firstItem="irh-kN-Dph" firstAttribute="top" secondItem="Zhj-HT-l6o" secondAttribute="top" constant="10" id="Lsu-tM-GlU"/>
                                     <constraint firstAttribute="trailing" secondItem="fGy-6q-cE2" secondAttribute="trailing" id="Sav-GJ-y4C"/>
                                     <constraint firstItem="AUd-EP-eci" firstAttribute="leading" secondItem="Zhj-HT-l6o" secondAttribute="leading" constant="10" id="ToD-L8-eAF"/>
                                     <constraint firstItem="b3Z-Az-pvC" firstAttribute="top" secondItem="a2m-2I-85n" secondAttribute="bottom" constant="5" id="d8X-4c-WXH"/>
                                     <constraint firstItem="AUd-EP-eci" firstAttribute="centerX" secondItem="Zhj-HT-l6o" secondAttribute="centerX" id="eI7-DW-iGZ"/>
                                     <constraint firstItem="a2m-2I-85n" firstAttribute="centerX" secondItem="Zhj-HT-l6o" secondAttribute="centerX" id="eON-xI-XLq"/>
+                                    <constraint firstAttribute="trailing" secondItem="irh-kN-Dph" secondAttribute="trailing" constant="10" id="elx-57-Ct8"/>
                                     <constraint firstItem="AUd-EP-eci" firstAttribute="top" secondItem="Ccv-TD-vqV" secondAttribute="bottom" constant="5" id="gmW-ma-3bO"/>
                                     <constraint firstItem="4aO-Fg-ISK" firstAttribute="top" secondItem="AUd-EP-eci" secondAttribute="bottom" constant="5" id="hch-GW-IMg"/>
                                     <constraint firstItem="fGy-6q-cE2" firstAttribute="top" secondItem="Zhj-HT-l6o" secondAttribute="top" id="k1m-b5-opj"/>
@@ -117,6 +123,7 @@
                                 <connections>
                                     <outlet property="address" destination="AUd-EP-eci" id="rTR-hB-7ci"/>
                                     <outlet property="distance" destination="b3Z-Az-pvC" id="XfB-QR-lNq"/>
+                                    <outlet property="favouriteImageView" destination="irh-kN-Dph" id="nhG-xa-Oaq"/>
                                     <outlet property="imageView" destination="fGy-6q-cE2" id="D18-Qq-8Oi"/>
                                     <outlet property="name" destination="Ccv-TD-vqV" id="AcA-Cq-NeQ"/>
                                     <outlet property="rating" destination="4aO-Fg-ISK" id="bpe-fG-gP4"/>
@@ -284,4 +291,7 @@
             <point key="canvasLocation" x="1586" y="-74"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="Star_On" width="30" height="30"/>
+    </resources>
 </document>

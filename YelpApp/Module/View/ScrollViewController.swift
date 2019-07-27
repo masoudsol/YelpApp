@@ -22,6 +22,8 @@ class ScrollViewController: UIViewController {
     @IBOutlet weak var reviewLabel: UILabel!
     
     let viewModel = ViewModel.shared
+    private var favourite = false
+    private var businessID: String = ""
     
     override func viewDidLoad() {
         viewModel.reviewLoaded = {[weak self] in
@@ -30,8 +32,17 @@ class ScrollViewController: UIViewController {
             }
         }
         
-        let resto = viewModel.getBusinuess(at: viewModel.selectedResto ?? 0)
-        
+        let resto = viewModel.getBusinuess(at: viewModel.selectedResto)
+        businessID = resto.restoID
+        let image: UIImage?
+        if UserDefaults.standard.bool(forKey: resto.restoID) {
+            image = UIImage(named: "Star_On")
+            favourite = true
+        } else {
+            image = UIImage(named: "Star_Off")
+        }
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: image?.withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(favourtieTapped))
+
         nameLabel.text = resto.name
         addressLabel.text = resto.completeAddress
         distanceLabel.text = resto.distance
@@ -65,5 +76,17 @@ class ScrollViewController: UIViewController {
     
     private func loadReview(){
         reviewLabel.text = viewModel.getReview()
+    }
+    
+    @objc func favourtieTapped(){
+        favourite = !favourite
+        UserDefaults.standard.set(favourite, forKey: businessID)
+        let image: UIImage?
+        if favourite {
+            image = UIImage(named: "Star_On")
+        } else {
+            image = UIImage(named: "Star_Off")
+        }
+        navigationItem.rightBarButtonItem?.image = image?.withRenderingMode(.alwaysOriginal)
     }
 }
