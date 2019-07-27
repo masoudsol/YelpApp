@@ -10,7 +10,7 @@ import Foundation
 
 struct WebServiceConstants {
     static let baseURL = "https://api.yelp.com/v3"
-    static let businuesSearchAPI = "/businesses/search"
+    static let businuesSearchAPI = "/businesses/search?categories=restaurants&limit=10"
     static let reviewsAPI = "/businesses/{id}/reviews"
     static let autocompleteAPI = "/autocomplete"
     static let kAPIKEY = "Bearer iO2PJJCcnQY_WAq8PkD0jA70ErLPueb6vKxtSAitf64pEf2D48IG8PlN63kg33OmRF0hrwgLzBUwanilm7j4ilTZHfsi_UGEQsKP4fFhAa418KSijPgctrZhLzycW3Yx"
@@ -23,11 +23,9 @@ class APIService {
     func fetchRestaurant(keyword: String?, lat: String, long: String, complete: @escaping ParsedCompletionBlock) {
         var url = WebServiceConstants.baseURL + WebServiceConstants.businuesSearchAPI
         if let keyword = keyword {
-            url += "?term=" + keyword + "&"
-        } else {
-            url += "?"
+            url += "&term=" + keyword
         }
-        url += "latitude=" + lat + "&longitude=" + long
+        url += "&latitude=" + lat + "&longitude=" + long
         requestAPI(url: url){ (data, error) in
             guard let data = data else{
                 complete(nil,error)

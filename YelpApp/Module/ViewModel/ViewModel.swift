@@ -21,6 +21,7 @@ class ViewModel {
     var selectedResto: Int = 0
     
     private var services = APIService()
+    private var ascendingOrder = false
     private init(){}
     
     func fetchRestaurants(keyword: String?, lat: String, long: String){
@@ -103,8 +104,14 @@ class ViewModel {
     }
     
     func sort(){
+        ascendingOrder = !ascendingOrder
+        
         restaurantModel = restaurantModel.sorted {
-            $0.name < $1.name
+            if ascendingOrder{
+                return $0.name < $1.name
+            } else {
+                return $0.name > $1.name
+            }
         }
         
         reloadTable()

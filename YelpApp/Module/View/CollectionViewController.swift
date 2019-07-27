@@ -21,7 +21,7 @@ class CollectionViewController: UICollectionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        searchBar.placeholder = "Search a Business"
+        searchBar.placeholder = "Search a Restaurnt"
         searchBar.delegate = self
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView:searchBar)
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Sort(A-z)", style: .plain, target: self, action: #selector(sortTapped))
@@ -112,7 +112,7 @@ extension CollectionViewController: CLLocationManagerDelegate {
         case .denied, .restricted:
              print("Location permission denied")
              print("Fetching Restaurants in Toronto")
-             viewModel.fetchRestaurants(keyword: nil, lat: "43.6532", long: "79.3832")
+             viewModel.fetchRestaurants(keyword: nil, lat: "43.6532", long: "-79.3832")
         case .authorizedWhenInUse:
             guard let locValue: CLLocationCoordinate2D = manager.location?.coordinate else { return }
             print("Got Location")
@@ -132,7 +132,7 @@ extension CollectionViewController: UISearchBarDelegate {
             viewModel.fetchRestaurants(keyword: searchBar.text, lat: String(locValue.latitude), long:  String(locValue.longitude))
         } else {
             //Default to Toronto
-            viewModel.fetchRestaurants(keyword: searchBar.text, lat: "43.6532", long: "79.3832")
+            viewModel.fetchRestaurants(keyword: searchBar.text, lat: "43.6532", long: "-79.3832")
         }
         searchBar.endEditing(true)
         
