@@ -26,7 +26,7 @@ class CollectionViewController: UICollectionViewController {
         
         let searchController = UISearchController(searchResultsController: nil)
         searchController.obscuresBackgroundDuringPresentation = false
-        searchController.searchBar.placeholder = "Search a Restaurnt"
+        searchController.searchBar.placeholder = "Search for a Restaurant"
         searchController.searchBar.delegate = self
         navigationItem.searchController = searchController
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Favourite", style: .plain, target: self, action: #selector(favTapped))
