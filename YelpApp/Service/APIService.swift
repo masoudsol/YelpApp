@@ -18,6 +18,7 @@ struct WebServiceConstants {
 }
 
 class APIService {
+    
     typealias WebServiceCompletionBlock = (_ data: Data?,_ error: Error?)->Void
     typealias ParsedCompletionBlock = (_ data: AnyObject?,_ error: Error?)->Void
     
