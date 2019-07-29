@@ -21,6 +21,7 @@ class FavouriteTableViewController: UITableViewController {
         
         tableView.tableFooterView = UIView()
         tableView.bounces = false
+        tableView.allowsSelection = false
     }
     
 }
