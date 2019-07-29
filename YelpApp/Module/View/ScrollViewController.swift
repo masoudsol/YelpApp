@@ -24,6 +24,7 @@ class ScrollViewController: UIViewController {
     let viewModel = ViewModel.shared
     private var favourite = false
     private var businessID: String = ""
+    private var businuesName: String = ""
     
     override func viewDidLoad() {
         viewModel.reviewLoaded = {[weak self] in
@@ -35,7 +36,8 @@ class ScrollViewController: UIViewController {
         let resto = viewModel.getBusinuess(at: viewModel.selectedResto)
         businessID = resto.restoID
         let image: UIImage?
-        if UserDefaults.standard.bool(forKey: resto.restoID) {
+        
+        if let favouriteDict = UserDefaults.standard.value(forKey: CollectionViewController.FAVOURITEKEY) as? Dictionary<String, String>, favouriteDict[businessID] != nil {
             image = UIImage(named: "Star_On")
             favourite = true
         } else {
@@ -44,6 +46,7 @@ class ScrollViewController: UIViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: image?.withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(favourtieTapped))
 
         nameLabel.text = resto.name
+        businuesName = resto.name ?? ""
         addressLabel.text = resto.completeAddress
         distanceLabel.text = resto.distance
         typeLabel.text = resto.type
@@ -80,7 +83,18 @@ class ScrollViewController: UIViewController {
     
     @objc func favourtieTapped(){
         favourite = !favourite
-        UserDefaults.standard.set(favourite, forKey: businessID)
+        
+        if let favouriteDict = UserDefaults.standard.value(forKey: CollectionViewController.FAVOURITEKEY) as? Dictionary<String, String> {
+            let dict = NSMutableDictionary(dictionary: favouriteDict)
+            if favourite {
+                dict.setValue(businuesName, forKey: businessID)
+            } else {
+                dict.removeObject(forKey: businessID)
+            }
+            UserDefaults.standard.set(dict, forKey: CollectionViewController.FAVOURITEKEY)
+        } else if favourite{
+            UserDefaults.standard.set([businessID:businuesName], forKey: CollectionViewController.FAVOURITEKEY)
+        }
         let image: UIImage?
         if favourite {
             image = UIImage(named: "Star_On")

@@ -17,13 +17,20 @@ class CollectionViewController: UICollectionViewController {
     private var locationManager: CLLocationManager?
     lazy private var searchBar:UISearchBar = UISearchBar(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width-150, height: 20))
     private var autocompleteTableView: UITableView = UITableView()
+    private var favourites:[String:String] = [:]
+    static let FAVOURITEKEY = "Favourite_Saved"
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        searchBar.placeholder = "Search a Restaurnt"
-        searchBar.delegate = self
-        navigationItem.leftBarButtonItem = UIBarButtonItem(customView:searchBar)
+        title = "Restaurants"
+        
+        let searchController = UISearchController(searchResultsController: nil)
+        searchController.obscuresBackgroundDuringPresentation = false
+        searchController.searchBar.placeholder = "Search a Restaurnt"
+        searchController.searchBar.delegate = self
+        navigationItem.searchController = searchController
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Favourite", style: .plain, target: self, action: #selector(favTapped))
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Sort(A-z)", style: .plain, target: self, action: #selector(sortTapped))
         
         autocompleteTableView =  UITableView(frame: CGRect(x: 0, y: 80, width: 320, height: 120),style: UITableView.Style.plain)
@@ -48,16 +55,23 @@ class CollectionViewController: UICollectionViewController {
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        collectionView.reloadData()
+        if let favouritesList = UserDefaults.standard.value(forKey: CollectionViewController.FAVOURITEKEY) as? [String : String] {
+            favourites = favouritesList
+            collectionView.reloadData()
+        }
     }
     
     @objc func sortTapped(){
         viewModel.sort()
     }
+    
+    @objc func favTapped(){
+        navigationController?.pushViewController(FavouriteTableViewController(), animated: true)
+    }
 }
 
-//Data Source
-extension CollectionViewController {
+//Data Source and CollectionViewDelegateFlowLayout
+extension CollectionViewController: UICollectionViewDelegateFlowLayout {
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let restaurantCell = collectionView.dequeueReusableCell(withReuseIdentifier: "RestaurantCell", for: indexPath) as? RestaurantCell else {
@@ -65,7 +79,7 @@ extension CollectionViewController {
         }
         let resto = viewModel.getBusinuess(at: indexPath.item)
         
-        restaurantCell.favouriteImageView.isHidden = !UserDefaults.standard.bool(forKey: resto.restoID)
+        restaurantCell.favouriteImageView.isHidden = favourites[resto.restoID] == nil
         restaurantCell.name.text = resto.name
         restaurantCell.address.text = resto.address
         restaurantCell.distance.text = resto.distance
@@ -103,10 +117,15 @@ extension CollectionViewController {
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         viewModel.fetchReview(at: indexPath.item)
     }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: collectionView.frame.width/2-15, height: 380)
+    }
 }
 
 //Location Manager Delegate
 extension CollectionViewController: CLLocationManagerDelegate {
+    
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         switch status {
         case .denied, .restricted:

@@ -12,6 +12,7 @@ struct WebServiceConstants {
     static let baseURL = "https://api.yelp.com/v3"
     static let businuesSearchAPI = "/businesses/search?categories=restaurants&limit=10"
     static let reviewsAPI = "/businesses/{id}/reviews"
+    static let businessDetailAPI = "/businesses/"
     static let autocompleteAPI = "/autocomplete"
     static let kAPIKEY = "Bearer iO2PJJCcnQY_WAq8PkD0jA70ErLPueb6vKxtSAitf64pEf2D48IG8PlN63kg33OmRF0hrwgLzBUwanilm7j4ilTZHfsi_UGEQsKP4fFhAa418KSijPgctrZhLzycW3Yx"
 }
@@ -72,6 +73,24 @@ class APIService {
             
             do {
                 let parsedJson = try self.parseJson(AutoCompleteModel.self, from: data)
+                complete(parsedJson as AnyObject,error)
+            } catch let error {
+                print(error.localizedDescription)
+                complete(nil,error)
+            }
+        }
+    }
+    
+    func fetchRestDetail(businessID: String, complete: @escaping ParsedCompletionBlock) {
+        let url = WebServiceConstants.baseURL + WebServiceConstants.businessDetailAPI + businessID
+        requestAPI(url: url){ (data, error) in
+            guard let data = data else{
+                complete(nil,error)
+                return
+            }
+            
+            do {
+                let parsedJson = try self.parseJson(Business.self, from: data)
                 complete(parsedJson as AnyObject,error)
             } catch let error {
                 print(error.localizedDescription)
