@@ -13,7 +13,6 @@ import PINRemoteImage
 class CollectionViewController: UICollectionViewController {
     
     private let viewModel = ViewModel.shared
-    private let loading = UIActivityIndicatorView(style: .whiteLarge)
     private var locationManager: CLLocationManager?
     lazy private var searchBar:UISearchBar = UISearchBar(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width-150, height: 20))
     private var autocompleteTableView: UITableView = UITableView()
@@ -44,11 +43,8 @@ class CollectionViewController: UICollectionViewController {
         locationManager?.delegate = self
         locationManager?.requestWhenInUseAuthorization()
         
-        loading.startAnimating()
-        // Do any additional setup after loading the view.
         viewModel.reloadTable = { [weak self] in
             DispatchQueue.main.async {
-                self?.loading.stopAnimating()
                 self?.collectionView.reloadData()
             }
         }
