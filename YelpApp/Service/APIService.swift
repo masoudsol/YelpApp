@@ -10,7 +10,7 @@ import Foundation
 
 struct WebServiceConstants {
     static let baseURL = "https://api.yelp.com/v3"
-    static let businuesSearchAPI = "/businesses/search?categories=restaurants&limit=10"
+    static let businuesSearchAPI = "/businesses/search?categories=restaurants"
     static let reviewsAPI = "/businesses/{id}/reviews"
     static let businessDetailAPI = "/businesses/"
     static let autocompleteAPI = "/autocomplete"
@@ -24,7 +24,7 @@ class APIService {
     func fetchRestaurant(keyword: String?, lat: String, long: String, complete: @escaping ParsedCompletionBlock) {
         var url = WebServiceConstants.baseURL + WebServiceConstants.businuesSearchAPI
         if let keyword = keyword {
-            url += "&term=" + keyword
+            url += "&limit=10&term=" + keyword
         }
         url += "&latitude=" + lat + "&longitude=" + long
         requestAPI(url: url){ (data, error) in
