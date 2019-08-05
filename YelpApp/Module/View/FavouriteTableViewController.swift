@@ -10,14 +10,12 @@ import UIKit
 
 class FavouriteTableViewController: UITableViewController {
     
-    private var favNames:[String] = []
-    
+    let viewModel = ViewModel.shared
+
     override func viewDidLoad() {
         title = "Favourite"
         
-        if let favouritesList = UserDefaults.standard.value(forKey: CollectionViewController.FAVOURITEKEY) as? [String : String] {
-            favNames = Array(favouritesList.values)
-        }
+        viewModel.loadFavourites()
         
         tableView.tableFooterView = UIView()
         tableView.bounces = false
@@ -29,12 +27,12 @@ class FavouriteTableViewController: UITableViewController {
 extension FavouriteTableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell()
-        cell.textLabel?.text = favNames[indexPath.row]
+        cell.textLabel?.text = viewModel.getFav(at: indexPath.row)
         cell.imageView?.image = UIImage(named: "Star_On")
         return cell 
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return favNames.count
+        return viewModel.favNames?.count ?? 0
     }
 }

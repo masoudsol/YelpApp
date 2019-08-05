@@ -19,6 +19,7 @@ class ViewModel {
     var restaurantModel = [Business]()
     var reviewModel = ReviewModel(reviews: [])
     var selectedResto: Int = 0
+    var favNames:[String]?
     
     private var services = APIService()
     private var ascendingOrder = false
@@ -101,6 +102,20 @@ class ViewModel {
     
     func fetchAutoComplete(keyword: String, lat: String, long: String){
         
+    }
+    
+    func loadFavourites() {
+        if let favouritesList = UserDefaults.standard.value(forKey: CollectionViewController.FAVOURITEKEY) as? [String : String] {
+            favNames = Array(favouritesList.values)
+        }
+    }
+    
+    func getFav(at index: Int) -> String? {
+        guard let favNames = favNames else {
+            return nil
+        }
+        
+        return favNames[index]
     }
     
     func sort(){
