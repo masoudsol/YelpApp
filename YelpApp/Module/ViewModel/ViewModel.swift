@@ -27,10 +27,12 @@ class ViewModel {
     
     func fetchRestaurants(keyword: String?, lat: String, long: String){
         services.fetchRestaurant(keyword: keyword, lat: lat, long: long) { (result, error) in
-            if let result = result as? RestaurantModel, let businuesses = result.businesses {
-                self.restaurantModel = businuesses
-                self.reloadTable()
+            guard let result = result as? RestaurantModel, let businuesses = result.businesses, error == nil else {
+                return
             }
+            
+            self.restaurantModel = businuesses
+            self.reloadTable()
         }
     }
     
@@ -84,10 +86,12 @@ class ViewModel {
         selectedResto = index
         let business = restaurantModel[index]
         services.fetchRestaurantReview(businuessID: business.id) { (result, error) in
-            if let result = result as? ReviewModel {
-                self.reviewModel = result
-                self.reviewLoaded()
+            guard let result = result as? ReviewModel, error == nil else {
+                return
             }
+            
+            self.reviewModel = result
+            self.reviewLoaded()
         }
     }
     
