@@ -16,5 +16,8 @@ Features
 Pods
 PIN image caching library
 
+Unit Tests
+- Bussinuess search test will retrieving a list of restaurants in toronto.
+
 License
 Copyright © 2019 Mas One. All rights reserved.
